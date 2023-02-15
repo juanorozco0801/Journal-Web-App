@@ -1,4 +1,4 @@
-import { SaveOutlined, SwapCalls, TransgenderTwoTone, UploadOutlined } from "@mui/icons-material"
+import { DeleteOutline, SaveOutlined, TransgenderTwoTone, UploadOutlined } from "@mui/icons-material"
 import { Button, Grid, IconButton, TextField, Typography } from "@mui/material"
 import { useEffect, useMemo, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
@@ -6,7 +6,7 @@ import Swal from "sweetalert2"
 import 'sweetalert2/dist/sweetalert2.css'
 
 import { useForm } from "../../hooks"
-import { setActiveNote, startSaveNote } from "../../store/journal"
+import { setActiveNote, startSaveNote, startUploadingFiles, startDeletingNote } from "../../store/journal"
 import { ImageGallery } from "../components"
 
 export const NoteView = () => {
@@ -41,10 +41,13 @@ export const NoteView = () => {
         dispatch( startSaveNote() )
     }
 
-    const onFileInputChange = (e) => {
-        if( TransgenderTwoTone.files === 0 ) return
+    const onDelete = () => {
+        dispatch( startDeletingNote());
+    }
 
-        console.log('subiendo archivos')
+    const onFileInputChange = ({target}) => {
+        if( TransgenderTwoTone.files === 0 ) return
+        dispatch( startUploadingFiles( target.files ))
     }
     
 
@@ -64,7 +67,6 @@ export const NoteView = () => {
                 onChange={ onFileInputChange }
                 style={{ display:'none' }}
             />
-
             <IconButton 
                 color="primary" 
                 disabled={ isSaving }
@@ -72,8 +74,6 @@ export const NoteView = () => {
             >
                 <UploadOutlined/>
             </IconButton>
-
-
             <Button
                 disabled={ isSaving }
                 onClick={ onSaveNote}
@@ -114,7 +114,19 @@ export const NoteView = () => {
 
         </Grid>
 
-        <ImageGallery/>
+        <Grid container justifyContent='end'>
+            <Button
+                disabled={ isSaving }
+                onClick={ onDelete}
+                color='error'
+                sx={{mt:2}}
+                >
+                <DeleteOutline sx={{ fontSize: 30, mr:1}}/>
+                Borrar
+            </Button>
+                    </Grid>
+
+        <ImageGallery images={ note.imageUrls}/>
 
     </Grid>
 

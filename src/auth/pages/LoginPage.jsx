@@ -9,14 +9,14 @@ import { startGoogleSignIn, startLoginWithEmailPassword } from "../../store/auth
 import { useForm } from "../../hooks"
 import { useMemo } from "react"
 
+const formData = {
+  email: '',
+  password: '',
+};
+
 export const LoginPage = () => {
 
   const dispatch = useDispatch();
-
-  const formData = {
-    email: '',
-    password: '',
-  };
 
   const { status, errorMessage } = useSelector( state => state.auth )
 
